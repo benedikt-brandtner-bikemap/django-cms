@@ -11,10 +11,12 @@ from cms.utils import get_cms_setting
 
 def _page_cache_key(request):
     #md5 key of current path
-    cache_key = "%s:%d:%s" % (
+    unit = request.COOKIES.get(settings.UNIT_COOKIE_NAME, 'metric')
+    cache_key = "%s:%d:%s:%s" % (
         get_cms_setting("CACHE_PREFIX"),
         settings.SITE_ID,
-        hashlib.md5(iri_to_uri(request.get_full_path()).encode('utf-8')).hexdigest()
+        hashlib.md5(iri_to_uri(request.get_full_path()).encode('utf-8')).hexdigest(),
+        unit
     )
     if settings.USE_TZ:
         # The datetime module doesn't restrict the output of tzname().
