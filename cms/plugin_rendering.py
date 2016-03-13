@@ -138,7 +138,7 @@ def render_placeholder(placeholder, context_to_copy, name_fallback="Placeholder"
         edit = False
     if get_cms_setting('PLACEHOLDER_CACHE') and use_cache:
         if not edit and placeholder and not hasattr(placeholder, 'cache_checked'):
-            cached_value = get_placeholder_cache(placeholder, lang)
+            cached_value = get_placeholder_cache(placeholder, request, lang)
             if not cached_value is None:
                 restore_sekizai_context(context, cached_value['sekizai'])
                 return mark_safe(cached_value['content'])
@@ -187,7 +187,7 @@ def render_placeholder(placeholder, context_to_copy, name_fallback="Placeholder"
     result = render_to_string("cms/toolbar/content.html", context)
     changes = watcher.get_changes()
     if placeholder and not edit and placeholder.cache_placeholder and get_cms_setting('PLACEHOLDER_CACHE') and use_cache:
-        set_placeholder_cache(placeholder, lang, content={'content': result, 'sekizai': changes})
+        set_placeholder_cache(placeholder, request, lang, content={'content': result, 'sekizai': changes})
     context.pop()
     return result
 

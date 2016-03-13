@@ -188,7 +188,7 @@ def _get_placeholder(current_page, page, context, name):
         fetch_placeholders = placeholders
     else:
         for placeholder in placeholders:
-            cached_value = get_placeholder_cache(placeholder, get_language())
+            cached_value = get_placeholder_cache(placeholder, request, get_language())
             if cached_value is not None:
                 restore_sekizai_context(context, cached_value['sekizai'])
                 placeholder.content_cache = cached_value['content']
@@ -224,7 +224,7 @@ def get_placeholder_content(context, request, current_page, name, inherit, defau
             if hasattr(placeholder, 'content_cache'):
                 return mark_safe(placeholder.content_cache)
             if not hasattr(placeholder, 'cache_checked'):
-                cached_value = get_placeholder_cache(placeholder, get_language())
+                cached_value = get_placeholder_cache(placeholder, request, get_language())
                 if cached_value is not None:
                     restore_sekizai_context(context, cached_value['sekizai'])
                     return mark_safe(cached_value['content'])
@@ -547,7 +547,7 @@ register.tag(PageAttribute)
 
 
 def _show_placeholder_for_page(context, placeholder_name, page_lookup, lang=None,
-                               site=None, cache_result=True):
+                                      site=None, cache_result=True):
     """
     Shows the content of a page with a placeholder name and given lookup
     arguments in the given language.
@@ -569,7 +569,7 @@ def _show_placeholder_for_page(context, placeholder_name, page_lookup, lang=None
         lang = get_language_from_request(request)
 
     if cache_result:
-        cached_value = get_placeholder_page_cache(page_lookup, lang, site_id, placeholder_name)
+        cached_value = get_placeholder_page_cache(page_lookup, request, lang, site_id, placeholder_name)
         if cached_value:
             restore_sekizai_context(context, cached_value['sekizai'])
             return {'content': mark_safe(cached_value['content'])}
@@ -587,7 +587,7 @@ def _show_placeholder_for_page(context, placeholder_name, page_lookup, lang=None
                                  use_cache=cache_result)
     changes = watcher.get_changes()
     if cache_result:
-        set_placeholder_page_cache(page_lookup, lang, site_id, placeholder_name,
+        set_placeholder_page_cache(page_lookup, request, lang, site_id, placeholder_name,
                                    {'content': content, 'sekizai': changes})
 
     if content:
