@@ -33,7 +33,7 @@ def get_placeholder_cache(placeholder, request, lang):
     """
     from django.core.cache import cache
     unit = request.COOKIES.get(settings.UNIT_COOKIE_NAME, 'metric')
-    return cache.get(_placeholder_cache_key(placeholder, unit, lang),
+    return cache.get(_placeholder_cache_key(placeholder, lang, unit),
                      version=_get_cache_version())
 
 
