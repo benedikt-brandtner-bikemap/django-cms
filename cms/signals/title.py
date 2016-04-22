@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from django.core.exceptions import ObjectDoesNotExist
+
 from cms.models import Title, Page
 from cms.signals.apphook import apphook_pre_title_checker, apphook_post_title_checker, apphook_post_delete_title_checker
 from menus.menu_pool import menu_pool
@@ -14,6 +16,23 @@ def update_title_paths(instance, **kwargs):
 
 def update_title(title):
     slug = u'%s' % title.slug
+    try:
+        extension = title.page.destinationpageextension
+    except ObjectDoesNotExist:
+        extension = None
+    if extension:
+        if extension.has_city():
+            slug = extension.city.slug
+        elif extension.has_region():
+            slug = extension.region.slug
+        elif extension.has_country():
+            slug = extension.country.slug
+    try:
+        extension = title.page.routewaypageextension
+    except ObjectDoesNotExist:
+        extension = None
+    if extension:
+        slug = extension.get_slug()
     if title.page.is_home:
         title.path = ''
     elif not title.has_url_overwrite:
