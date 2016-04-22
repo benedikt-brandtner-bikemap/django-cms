@@ -10,7 +10,7 @@ from django.utils.six.moves.urllib.parse import urlparse
 from cms.utils.conf import get_cms_setting
 
 # checks validity of absolute / relative url
-any_path_re = re.compile('^/?[a-zA-Z0-9_.-]+(/[a-zA-Z0-9_.-]+)*/?$')
+any_path_re = re.compile('^/?[a-zA-Z0-9_\+.-]+(/[a-zA-Z0-9_\+.-]+)*/?$')
 
 
 def levelize_path(path):
