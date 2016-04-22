@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import re
+import unicodedata
 from collections import defaultdict
 try:
     from collections import OrderedDict
@@ -7,7 +9,10 @@ except ImportError:
 
 from django.contrib.sites.models import Site
 from django.db.models.signals import post_save, post_delete
-from django.utils.safestring import mark_safe
+from django.utils import six
+from django.utils.encoding import force_text
+from django.utils.safestring import SafeText, mark_safe
+from django.utils.functional import allow_lazy
 
 from cms.cache.choices import (clean_site_choices_cache, clean_page_choices_cache,
                                _site_cache_key, _page_cache_key)
@@ -81,6 +86,14 @@ def get_page_choices(lang=None):
     if page_choices is None:
         site_choices, page_choices = update_site_and_page_choices(lang)
     return page_choices
+
+
+def _slugify(value):
+    value = force_text(value)
+    value = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore').decode('ascii')
+    value = re.sub('[^A-Za-z0-9_\+\s-]', '', value).strip()
+    return mark_safe(re.sub('[-\s]+', '-', value))
+slugify = allow_lazy(_slugify, six.text_type, SafeText)
 
 
 post_save.connect(clean_page_choices_cache, sender=Page)

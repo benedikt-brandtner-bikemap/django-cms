@@ -11,13 +11,13 @@ try:
 except ImportError:
     from django.forms.util import ErrorList
 from django.forms.widgets import HiddenInput
-from django.template.defaultfilters import slugify
 from django.utils.encoding import force_text
 from django.utils.translation import ugettext_lazy as _, get_language
 
 from cms.apphook_pool import apphook_pool
 from cms.constants import PAGE_TYPES_ID
 from cms.forms.widgets import UserSelectAdminWidget, AppHookSelect, ApplicationConfigSelect
+from cms.forms.utils import slugify
 from cms.models import (Page, PagePermission, PageUser, ACCESS_PAGE, PageUserGroup, Title,
                         EmptyTitle, GlobalPagePermission)
 from cms.utils.compat.forms import UserCreationForm
