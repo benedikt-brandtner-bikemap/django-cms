@@ -46,10 +46,8 @@ def get_placeholder_cache(placeholder, request, lang):
 def clear_placeholder_cache(placeholder, lang):
     from django.core.cache import cache
     for unit in settings.UNITS:
-        super_user = 'admin'
-        cache.delete(_placeholder_cache_key(placeholder, lang, unit, super_user), version=_get_cache_version())
-        super_user = 'user'
-        cache.delete(_placeholder_cache_key(placeholder, lang, unit, super_user), version=_get_cache_version())
+        cache.delete(_placeholder_cache_key(placeholder, lang, unit, True), version=_get_cache_version())
+        cache.delete(_placeholder_cache_key(placeholder, lang, unit, False), version=_get_cache_version())
 
 
 def _placeholder_page_cache_key(page_lookup, lang, unit, site_id, placeholder_name, super_user):
