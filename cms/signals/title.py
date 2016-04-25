@@ -43,6 +43,7 @@ def update_title(title):
                                                    language=title.language, language_fallback=True)
             if parent_title:
                 title.path = (u'%s/%s' % (parent_title.path, slug)).lstrip("/")
+    title.slug = slug
 
 
 def pre_save_title(instance, raw, **kwargs):
