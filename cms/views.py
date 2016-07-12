@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import with_statement
 
+import re
+
 from django.conf import settings
 from django.contrib.auth.views import redirect_to_login
 from django.core.urlresolvers import resolve, Resolver404, reverse
@@ -17,6 +19,9 @@ from cms.utils.i18n import (get_fallback_languages, force_language, get_public_l
                             get_redirect_on_fallback, get_language_list,
                             is_language_prefix_patterns_used)
 from cms.utils.page_resolver import get_page_from_request
+
+
+LANG_URL_PATTERN = re.compile(r'^/[a-z]{2}(-[A-Za-z]{2}){0,1}/(?P<more>.*)')
 
 
 def details(request, slug):
@@ -147,6 +152,9 @@ def details(request, slug):
         if (is_language_prefix_patterns_used() and redirect_url[0] == "/"
                 and not redirect_url.startswith('/%s/' % current_language)):
             # add language prefix to url
+            lang_url_match = LANG_URL_PATTERN.match(redirect_url)
+            if lang_url_match:
+                redirect_url = lang_url_match.groups()[1]
             redirect_url = "/%s/%s" % (current_language, redirect_url.lstrip("/"))
             # prevent redirect to self
 
