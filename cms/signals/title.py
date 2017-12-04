@@ -22,11 +22,11 @@ def update_title(title):
         extension = None
     if extension:
         if extension.has_city():
-            slug = extension.city.slug
+            slug = extension.city_id
         elif extension.has_region():
-            slug = extension.region.slug
+            slug = extension.region_id
         elif extension.has_country():
-            slug = extension.country.slug
+            slug = extension.country_id
     try:
         extension = title.page.routewaypageextension
     except ObjectDoesNotExist:
